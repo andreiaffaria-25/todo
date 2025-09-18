@@ -1,92 +1,112 @@
 import 'package:flutter/material.dart';
 
+
 void main() {
-  runApp(const MyApp());
+  runApp(TodoList());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class TodoList extends StatelessWidget {
+  const TodoList({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 183, 58, 85)),
-      ),
-      home: const MyHomePage(title: 'TODO APP'),
+      home: MyHomePage()
     );
   }
 }
 
+
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  // ignore: library_private_types_in_public_api
+  _MyHomePageScreenState createState() => _MyHomePageScreenState();
+  const MyHomePage({super.key});
+
+}
+class _MyHomePageScreenState extends State<MyHomePage> {
+  List<String> tasks = ['1', 'ola'];
+  final TextEditingController _controller = TextEditingController();
+
+
+  void addTask() {
+    final task = _controller.text.trim();
+    if (task.isNotEmpty) {
+      setState(() {
+        tasks.add(task);
+      });
+      _controller.clear();
+    }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
   
-
 
 
   @override
   Widget build(BuildContext context) {
+    var blueGrey = Colors.blueGrey;
     return Scaffold(
-      body: ColoredBox(
-        color: Colors.black,
+      
+      body: Container(
+        color: const Color.fromARGB(255, 245, 142, 176),
+        padding: EdgeInsets.all(60.0),
         child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          spacing: 20.0,
           children: <Widget>[
-            const Text('You have pushed the button this many times:'),
             Text(
               'TODO APP',
               style: TextStyle(color: Colors.white, fontSize: 24, ),
             ),
             Row (
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              spacing: 30.0,
               children: [
                 SizedBox(
                   width: 200,
               child: TextField(
+                controller: _controller,
               decoration: InputDecoration(
                 hintText: 'Enter Something',
                 filled: true,
                 fillColor: Colors.white
               ),
             )
-
-
             ),
 
-            ElevatedButton(onPressed: () {}, child: Text('Add'))
+            
+
+          
+            ElevatedButton(
+              onPressed: addTask,
+              style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Button padding
+            textStyle: const TextStyle(fontSize: 16, color: Colors.black), // Text style
+            ),
+              child: Text('Add')
+            )
             
               ],
-            )
+            ),
+
+            Expanded(
+              child: ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(tasks[index], style: TextStyle(color: Colors.white)));
+                }),)
           ],
         ),
-      )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      ),
     );
   }
 }
