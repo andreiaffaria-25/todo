@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/task.dart';
+
 
 
 void main() {
@@ -24,8 +26,9 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
 }
+
 class _MyHomePageScreenState extends State<MyHomePage> {
-  List<String> tasks = ['1', 'ola'];
+  List<Task> tasks = [];
   final TextEditingController _controller = TextEditingController();
 
 
@@ -33,7 +36,7 @@ class _MyHomePageScreenState extends State<MyHomePage> {
     final task = _controller.text.trim();
     if (task.isNotEmpty) {
       setState(() {
-        tasks.add(task);
+        tasks.add(Task(task, false));
       });
       _controller.clear();
     }
@@ -101,7 +104,8 @@ class _MyHomePageScreenState extends State<MyHomePage> {
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(tasks[index], style: TextStyle(color: Colors.white)));
+                    title: Text(tasks[index].title, style: TextStyle(color: Colors.white)));
+
                 }),)
           ],
         ),
