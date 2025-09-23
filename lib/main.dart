@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/task.dart';
-
-
+import 'package:todo_app/taskTitle.dart';
 
 void main() {
   runApp(TodoList());
@@ -39,7 +38,7 @@ class _MyHomePageScreenState extends State<MyHomePage> {
         tasks.add(Task(task, false));
       });
       _controller.clear();
-    }
+    }  
 }
 
   
@@ -47,11 +46,10 @@ class _MyHomePageScreenState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var blueGrey = Colors.blueGrey;
     return Scaffold(
       
       body: Container(
-        color: const Color.fromARGB(255, 245, 142, 176),
+        color: const Color.fromARGB(255, 255, 255, 255),
         padding: EdgeInsets.all(60.0),
         child: Center(
         child: Column(
@@ -60,7 +58,7 @@ class _MyHomePageScreenState extends State<MyHomePage> {
           children: <Widget>[
             Text(
               'TODO APP',
-              style: TextStyle(color: Colors.white, fontSize: 24, ),
+              style: TextStyle(color: const Color.fromARGB(255, 192, 76, 115), fontSize: 24, ),
             ),
             Row (
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,9 +69,15 @@ class _MyHomePageScreenState extends State<MyHomePage> {
               child: TextField(
                 controller: _controller,
               decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(17),
+                  borderSide: BorderSide(
+                    color: const Color.fromARGB(255, 255, 158, 190),
+                  )
+                ),
                 hintText: 'Enter Something',
                 filled: true,
-                fillColor: Colors.white
+                fillColor: const Color.fromARGB(255, 255, 221, 221)
               ),
             )
             ),
@@ -84,8 +88,8 @@ class _MyHomePageScreenState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: addTask,
               style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
+              backgroundColor: const Color.fromARGB(255, 255, 187, 187),
+              foregroundColor: const Color.fromARGB(255, 0, 0, 0),
               shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -103,9 +107,7 @@ class _MyHomePageScreenState extends State<MyHomePage> {
               child: ListView.builder(
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(tasks[index].title, style: TextStyle(color: Colors.white)));
-
+                  return TaskTile(task: tasks[index]);
                 }),)
           ],
         ),

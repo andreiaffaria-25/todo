@@ -4,4 +4,4 @@ class Task {
   bool isDone;
 
   Task(this.title, this.isDone);
-} 
+}
