@@ -47,7 +47,6 @@ class _MyHomePageScreenState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Container(
         color: const Color.fromARGB(255, 255, 255, 255),
         padding: EdgeInsets.all(60.0),
@@ -67,7 +66,8 @@ class _MyHomePageScreenState extends State<MyHomePage> {
                 SizedBox(
                   width: 200,
               child: TextField(
-                controller: _controller,
+              controller: _controller,
+              autofocus: false,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(17),
