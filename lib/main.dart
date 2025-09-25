@@ -1,48 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/task.dart';
-import 'package:todo_app/taskTitle.dart';
+import 'package:todo_app/task_manager.dart';
 
 void main() {
-  runApp(TodoList());
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: TodoApp()));
 }
 
-class TodoList extends StatelessWidget {
-  const TodoList({super.key});
+class TodoApp extends StatefulWidget {
+  const TodoApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHomePage()
-    );
-  }
-}
-
-
-class MyHomePage extends StatefulWidget {
-  @override
-  // ignore: library_private_types_in_public_api
-  _MyHomePageScreenState createState() => _MyHomePageScreenState();
-  const MyHomePage({super.key});
+  State<TodoApp> createState() => _TodoAppState();
 
 }
 
-class _MyHomePageScreenState extends State<MyHomePage> {
+class _TodoAppState extends State<TodoApp> {
+  final TaskManager manager = TaskManager();
   List<Task> tasks = [];
   final TextEditingController _controller = TextEditingController();
 
 
-  void addTask() {
-    final task = _controller.text.trim();
-    if (task.isNotEmpty) {
-      setState(() {
-        tasks.add(Task(task, false));
-      });
-      _controller.clear();
-    }  
-}
+  @override
+  void initState() {
+    super.initState();
+    loadTasks();
+  }
 
-  
+  Future<void> loadTasks() async {
+    final loaded = await manager.loadTasks();
+    setState(() => tasks = loaded);
+  }
 
+  Future<void> addTask(String title) async {
+    if (title.trim().isEmpty) return;
+    setState(() => tasks.add(Task(id: 'id', title: title)));
+    await manager.saveTasks(tasks);
+    _controller.clear();
+  }
+
+  Future<void> toggleTask(int index) async {
+    setState(() => tasks[index].isDone = !tasks[index].isDone);
+    await manager.saveTasks(tasks);
+  }
+
+  Future<void> deleteTask(int index) async {
+    setState(() => tasks.removeAt(index));
+    await manager.saveTasks(tasks);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +90,7 @@ class _MyHomePageScreenState extends State<MyHomePage> {
 
           
             ElevatedButton(
-              onPressed: addTask,
+              onPressed: () => addTask(_controller.text),
               style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 255, 187, 187),
               foregroundColor: const Color.fromARGB(255, 0, 0, 0),
@@ -106,9 +110,23 @@ class _MyHomePageScreenState extends State<MyHomePage> {
             Expanded(
               child: ListView.builder(
                 itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  return TaskTile(task: tasks[index]);
-                }),)
+                itemBuilder: (context, index) => ListTile(
+                  leading: Checkbox(
+                    value: tasks[index].isDone, 
+                    onChanged: (_) => toggleTask(index)
+                    ),
+                    title: Text(
+                      tasks[index].title,
+                      style: TextStyle(
+                        decoration: tasks[index].isDone
+                        ? TextDecoration.lineThrough 
+                        : null,
+                      ),
+                    ),
+                    trailing: IconButton(
+                      onPressed: () => deleteTask(index), 
+                      icon: const Icon(Icons.delete)),
+                )),)
           ],
         ),
       ),
@@ -116,3 +134,8 @@ class _MyHomePageScreenState extends State<MyHomePage> {
     );
   }
 }
+
+  
+
+
+
